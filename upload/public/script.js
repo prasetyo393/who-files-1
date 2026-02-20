@@ -1,61 +1,107 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const multer = require("multer");
-const cors = require("cors");
-const path = require("path");
-const fs = require("fs");
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.static("public"));
+body {
+    font-family: 'Segoe UI', sans-serif;
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-mongoose.connect("mongodb://127.0.0.1:27017/cloudDrive");
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
 
-const FileSchema = new mongoose.Schema({
-    filename: String,
-    originalname: String,
-    size: Number,
-    uploadDate: { type: Date, default: Date.now }
-});
+.card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    color: white;
+    text-align: center;
+    animation: fadeIn 0.8s ease-in-out;
+}
 
-const File = mongoose.model("File", FileSchema);
+h1 {
+    margin-bottom: 20px;
+}
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "uploads/");
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + "-" + file.originalname);
-    }
-});
+.upload-section {
+    margin-bottom: 25px;
+}
 
-const upload = multer({ storage: storage });
+input[type="file"] {
+    margin-bottom: 10px;
+    color: white;
+}
 
-app.post("/upload", upload.single("file"), async (req, res) => {
-    const file = new File({
-        filename: req.file.filename,
-        originalname: req.file.originalname,
-        size: req.file.size
-    });
-    await file.save();
-    res.json({ message: "File uploaded!" });
-});
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+}
 
-app.get("/files", async (req, res) => {
-    const files = await File.find().sort({ uploadDate: -1 });
-    res.json(files);
-});
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
 
-app.get("/download/:filename", (req, res) => {
-    res.download(path.join(__dirname, "uploads", req.params.filename));
-});
+ul {
+    list-style: none;
+    margin-top: 15px;
+}
 
-app.delete("/delete/:id", async (req, res) => {
-    const file = await File.findById(req.params.id);
-    fs.unlinkSync(path.join(__dirname, "uploads", file.filename));
-    await file.deleteOne();
-    res.json({ message: "File deleted!" });
-});
+li {
+    background: rgba(255,255,255,0.2);
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+}
 
-app.listen(3000, () => console.log("Server running on http://localhost:3000"));
+li:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-3px);
+}
+
+.file-name {
+    font-weight: 500;
+}
+
+.file-actions button {
+    margin-left: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.file-actions button:first-child {
+    background: #28a745;
+}
+
+.file-actions button:last-child {
+    background: #dc3545;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
