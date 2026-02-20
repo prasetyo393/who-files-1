@@ -3,15 +3,25 @@
 <head>
     <title>My Cloud Drive</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>My Cloud Storage</h1>
 
-    <input type="file" id="fileInput">
-    <button onclick="uploadFile()">Upload</button>
+    <div class="container">
+        <div class="card">
+            <h1><i class="fa-solid fa-cloud"></i> My Cloud Storage</h1>
 
-    <h2>File List</h2>
-    <ul id="fileList"></ul>
+            <div class="upload-section">
+                <input type="file" id="fileInput">
+                <button onclick="uploadFile()">
+                    <i class="fa-solid fa-upload"></i> Upload File
+                </button>
+            </div>
+
+            <h2>📁 File List</h2>
+            <ul id="fileList"></ul>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
